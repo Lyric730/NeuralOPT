@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Team</title>
+  <style>
+    body {
+      font-family: 'Times New Roman', serif;
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      background-color: #1a2a40; /* 深蓝色 */
+      color: #ffffff; /* 白色文字 */
+    }
+    .sidebar {
+      width: 250px;
+      background-color: rgba(44, 62, 80, 0.5); /* 半透明的深蓝色 */
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+    .member-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .member-card {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      cursor: pointer;
+      border-bottom: 1px solid #34495e; /* 边框颜色 */
+      transition: background-color 0.3s;
+    }
+    .member-card:hover {
+      background-color: #34495e; /* 悬停背景色 */
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #ccc;
+      margin-right: 15px;
+    }
+    .member-name {
+      font-size: 16px;
+    }
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 0;
+      min-height: 100vh;
+    }
+    .member-detail {
+      display: none;
+    }
+    .member-detail.active {
+      display: block;
+    }
+    .member-detail-card {
+      display: flex;
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      border-radius: 10px;
+      max-width: 1200px;
+    }
+
+    .member-photo {
+      width: 300px;
+      height: 300px;
+      border-radius: 10px;
+      margin-right: 40px;
+    }
+
+    .member-info {
+      color: white;
+      font-size: 1.2em;
+    }
+
+    .member-info h2 {
+      margin-top: 0;
+      font-size: 2em;
+    }
+    .background-blur {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      filter: blur(10px);
+      z-index: -1;
+      transition: background-image 0.5s ease-in-out;
+      background-image: url('图库/微信图片_20250527143522 - 副本.png');
+    }
+  </style>
+</head>
+<body>
+  <div class="background-blur"></div>
+  <div class="sidebar">
+    <ul class="member-list">
+      <li class="member-card" data-member="team-intro">
+        <img src="图库/微信图片_20250527143522 - 副本.png" alt="团队介绍" class="avatar">
+        <span class="member-name">Our Team</span>
+      </li>
+      <li class="member-card" data-member="member1">
+        <img src="图库/成员一.jpg" alt="张梓琳" class="avatar">
+        <span class="member-name">张梓琳</span>
+      </li>
+      <li class="member-card" data-member="member2">
+        <img src="图库/成员二.jpg" alt="谢瑾滢" class="avatar">
+        <span class="member-name">谢瑾滢</span>
+      </li>
+      <li class="member-card" data-member="member3">
+        <img src="图库/成员三.jpg" alt="刘又瑄" class="avatar">
+        <span class="member-name">刘又瑄</span>
+      </li>
+      <li class="member-card" data-member="member4">
+        <img src="图库/成员四.jpg" alt="王子睿" class="avatar">
+        <span class="member-name">王子睿</span>
+      </li>
+      <li class="member-card" data-member="member5">
+        <img src="图库/成员五.jpg" alt="史睿健" class="avatar">
+        <span class="member-name">史睿健</span>
+      </li>
+      <li class="member-card" data-member="member6">
+        <img src="图库/成员六.jpg" alt="成员六" class="avatar">
+        <span class="member-name">成员六</span>
+      </li>
+    </ul>
+  </div>
+   <div class="main-content">
+     <div id="team-intro" class="member-detail active" data-image="图库/微信图片_20250527143522 - 副本.png">
+       <div class="member-detail-card">
+         <img src="图库/微信图片_20250527143522 - 副本.png" alt="团队介绍" class="member-photo" />
+         <div class="member-info">
+           <h2>Our Team</h2>
+           <p>我们是一个充满激情与创造力的团队，成员来自不同专业，致力于用技术和创新解决实际问题。每个人都在团队中发挥着独特的作用，协作共进，追求卓越。欢迎了解我们的成员和故事！</p>
+         </div>
+       </div>
+     </div>
+    <div id="member1" class="member-detail" data-image="图库/成员一.jpg">
+      <div class="member-detail-card">
+        <img src="图库/成员一.jpg" alt="成员一" class="member-photo" />
+        <div class="member-info">
+          <h2>张梓琳</h2>
+          <p><strong>班级:</strong> 计科2403</p>
+          <p><strong>座右铭:</strong> 莫慌莫慌，大阳下山有月光~</p>
+          <p><strong>手机:</strong> 18939593778</p>
+          <p><strong>邮箱:</strong> 24722114@bjtu.edu.cn</p>
+        </div>
+      </div>
+    </div>
+    <div id="member2" class="member-detail" data-image="图库/成员二.jpg">
+      <div class="member-detail-card">
+        <img src="图库/成员二.jpg" alt="成员二" class="member-photo">
+        <div class="member-info">
+          <h2>谢瑾滢</h2>
+          <p><strong>班级:</strong> 计科2403</p>
+          <p><strong>座右铭:</strong> 没有人是一座孤岛</p>
+          <p><strong>手机:</strong> 15101005117</p>
+          <p><strong>邮箱:</strong> 24722107@bjtu.edu.cn</p>
+        </div>
+      </div>
+    </div>
+    <div id="member3" class="member-detail" data-image="图库/成员三.jpg">
+      <div class="member-detail-card">
+        <img src="图库/成员三.jpg" alt="成员三" class="member-photo">
+        <div class="member-info">
+          <h2>刘又瑄</h2>
+          <p><strong>班级:</strong> 信管2403</p>
+          <p><strong>座右铭:</strong> Be patient, be silent,and go ahead</p>
+          <p><strong>手机:</strong> 16692660730</p>
+          <p><strong>邮箱:</strong> 16692660730@163.com</p>
+        </div>
+      </div>
+    </div>
+    <div id="member4" class="member-detail" data-image="图库/成员四.jpg">
+      <div class="member-detail-card">
+        <img src="图库/成员四.jpg" alt="成员四" class="member-photo">
+        <div class="member-info">
+          <h2>王子睿</h2>
+          <p><strong>班级:</strong> 工商2402班</p>
+          <p><strong>座右铭:</strong> 或许不必太复杂</p>
+          <p><strong>手机:</strong> 18856861837</p>
+          <p><strong>邮箱:</strong> 24726066@bjtu.edu.cn</p>
+        </div>
+      </div>
+    </div>
+    <div id="member5" class="member-detail" data-image="图库/成员五.jpg">
+      <div class="member-detail-card">
+        <img src="图库/成员五.jpg" alt="成员五" class="member-photo">
+        <div class="member-info">
+          <h2>史睿健</h2>
+          <p><strong>班级:</strong> 信管2401</p>
+          <p><strong>座右铭:</strong> 这不就好起来了！</p>
+          <p><strong>手机:</strong> 15858187695</p>
+          <p><strong>邮箱:</strong> 1807883640@qq.com</p>
+        </div>
+      </div>
+    </div>
+    <div id="member6" class="member-detail" data-image="图库/成员六.jpg">
+      <div class="member-detail-card">
+        <img src="图库/成员六.jpg" alt="成员六" class="member-photo">
+        <div class="member-info">
+          <h2>成员六</h2>
+          <p><strong>班级:</strong> 待补充</p>
+          <p><strong>座右铭:</strong> 待补充</p>
+          <p><strong>手机:</strong> 待补充</p>
+          <p><strong>邮箱:</strong> 待补充</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const memberCards = document.querySelectorAll('.member-card');
+      const memberDetails = document.querySelectorAll('.member-detail');
+      const backgroundBlur = document.querySelector('.background-blur');
+
+      // Set initial background
+      const initialMember = document.querySelector('.member-detail.active');
+      if (initialMember) {
+        const initialImage = initialMember.getAttribute('data-image');
+        backgroundBlur.style.backgroundImage = 'url("' + initialImage + '")';
+      }
+
+      memberCards.forEach(card => {
+        card.addEventListener('click', function() {
+          const memberId = this.getAttribute('data-member');
+          const teamImage = '图库/微信图片_20250527143522 - 副本.png';
+
+          memberDetails.forEach(detail => {
+            if (detail.id === memberId) {
+              detail.classList.add('active');
+              let newImage = detail.getAttribute('data-image');
+              if (memberId === 'team-intro') {
+                newImage = teamImage; // 强制 Our Team 使用指定背景
+              }
+              backgroundBlur.style.backgroundImage = 'url("' + newImage + '")';
+            } else {
+              detail.classList.remove('active');
+            }
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
