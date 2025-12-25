@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NeuralOPT — 登录 / 注册</title>
+  <meta name="description" content="NeuralOPT — AI+商业供应链决策模拟平台 登录 / 注册" />
+
+  <!--
+    变量/替换说明：
+      - PLATFORM_NAME 可修改 page 的品牌文字
+      - SLOGAN 可修改宣传语
+      - REDIRECT_URL 登录成功后的重定向地址（默认 /lobby.html）
+      - MAIN_ACCENT 主要点缀色 (#6B7280 金属银灰)
+    替换这些常量只需在 <script id="config"> 区块修改即可。
+  -->
+
+  <style>
+    :root{
+      --bg: #ffffff;
+      --text: #0f1724; /* 深墨色 */
+      --muted: #6b7280; /* 金属银灰 点缀 */
+      --card-shadow: 0 10px 30px rgba(15,23,36,0.06);
+      --card-width: 360px;
+      --radius: 12px;
+      --gap: 24px;
+      --transition: 220ms cubic-bezier(.2,.9,.2,1);
+      --focus-ring: 3px solid rgba(107,114,128,0.12);
+      --success: #10b981;
+      --danger: #ef4444;
+      font-family: "SF Pro Display", Inter, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* Basic reset */
+    *{box-sizing:border-box}
+    html,body,#app{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.4;
+      -webkit-font-smoothing:antialiased;
+      display:flex;
+      align-items:stretch;
+      justify-content:center;
+    }
+
+    /* Layout */
+    .wrap{
+      width:100%;
+      min-height:100vh;
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:48px;
+      align-items:center;
+      padding:48px;
+    }
+
+    /* Responsive: single column for small screens */
+    @media (max-width:960px){
+      .wrap{ grid-template-columns:1fr; padding:24px; gap:16px; }
+      .hero{ order:1; min-height:40vh; }
+      .card{ order:2; margin: 0 auto; }
+    }
+
+    /* LEFT HERO: background blur + animated SVG overlay */
+    .hero{
+      position:relative;
+      min-height:68vh;
+      border-radius: var(--radius);
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:48px;
+      background: linear-gradient(180deg, rgba(250,250,251,0.72), rgba(250,250,251,0.72));
+      box-shadow: var(--card-shadow);
+    }
+
+    /* Simulated blurred city photo using SVG shapes + filter - replace with real image using .city-image if desired */
+    .city-bg{
+      position:absolute;
+      inset:0;
+      z-index:0;
+      opacity:1;
+      display:block;
+      filter: blur(12px) saturate(0.2) contrast(0.95);
+      transform: scale(1.02);
+    }
+
+    /* SVG network canvas above the city */
+    .network-canvas{
+      position:absolute;
+      inset:0;
+      z-index:1;
+      pointer-events:none;
+      mix-blend-mode:normal;
+    }
+
+    /* content over hero */
+    .hero-inner{
+      position:relative;
+      z-index:2;
+      max-width:680px;
+      padding:12px 24px;
+      color:var(--text);
+    }
+    .brand{
+      display:flex;
+      gap:18px;
+      align-items:center;
+    }
+    .brand .logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .brand h1{
+      font-size:22px;
+      margin:0;
+      letter-spacing: -0.02em;
+    }
+    .brand p{ margin:6px 0 0; color:var(--muted); font-size:14px; }
+
+    .hero-illustration{
+      margin-top:28px;
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    /* Right card */
+    .card{
+      width:var(--card-width);
+      max-width:calc(100% - 32px);
+      background:linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,1));
+      border-radius:14px;
+      box-shadow:var(--card-shadow);
+      padding:20px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      align-self:center;
+    }
+
+    .card .card-head{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .card .slogan{ color:var(--muted); font-size:13px; margin-top:2px; }
+
+    /* Tabs */
+    .tabs{
+      display:flex;
+      gap:10px;
+      margin-top:6px;
+    }
+    .tab{
+      padding:8px 12px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+      font-size:14px;
+      color:var(--muted);
+      background:transparent;
+      transition: all var(--transition);
+      border:1px solid transparent;
+    }
+    .tab[aria-selected="true"]{
+      color:var(--text);
+      background:rgba(15,23,36,0.03);
+      border-color:rgba(15,23,36,0.04);
+      box-shadow: inset 0 -3px 0 rgba(107,114,128,0.02);
+    }
+
+    form{ display:flex; flex-direction:column; gap:12px; margin-top:6px; }
+    label{ font-size:13px; color:var(--muted); display:block; margin-bottom:6px; }
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    input[type="text"], input[type="email"], input[type="password"], input[type="tel"]{
+      padding:12px 14px;
+      font-size:14px;
+      border-radius:10px;
+      border:1px solid rgba(15,23,36,0.06);
+      outline:none;
+      transition: box-shadow var(--transition), transform var(--transition);
+      background:#fff;
+    }
+    input:focus{
+      box-shadow: var(--focus-ring);
+      border-color: rgba(107,114,128,0.16);
+      transform: translateY(-1px);
+    }
+
+    .row{ display:flex; gap:10px; align-items:center; justify-content:space-between; }
+    .checkbox{
+      display:flex; gap:8px; align-items:center; color:var(--muted); font-size:13px;
+    }
+    .link{ color:var(--muted); text-decoration:none; font-size:13px; }
+    .link:hover{ text-decoration:underline; }
+
+    .btn{
+      padding:12px 14px;
+      border-radius:10px;
+      border:0;
+      font-weight:700;
+      cursor:pointer;
+      transition: transform 140ms ease, box-shadow 140ms ease;
+      background:var(--text);
+      color:white;
+      letter-spacing:0.01em;
+    }
+    .btn:active{ transform: translateY(1px) scale(0.998); }
+    .btn[aria-disabled="true"]{ opacity:0.6; cursor:not-allowed; transform:none; }
+
+    .secondary{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid rgba(15,23,36,0.04);
+      font-weight:600;
+    }
+
+    .helper{ font-size:13px; color:var(--muted); text-align:center; margin-top:6px; }
+
+    .error{
+      color:var(--danger);
+      font-size:13px;
+    }
+    .toast{
+      position:fixed;
+      right:24px;
+      bottom:24px;
+      background: #111827;
+      color:white;
+      padding:10px 14px;
+      border-radius:10px;
+      box-shadow:0 8px 30px rgba(2,6,23,0.4);
+      display:none;
+      z-index:9999;
+    }
+
+    /* small helpers */
+    .flex{ display:flex; gap:12px; align-items:center; }
+    .muted{ color:var(--muted); font-size:13px; }
+
+    /* Accessibility focus outlines for keyboard users */
+    :focus{ outline: none; }
+    a:focus, button:focus, input:focus{ box-shadow: var(--focus-ring); border-radius:8px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="wrap" role="main">
+      <!-- LEFT: HERO with simulated blurred city + SVG network animation -->
+      <section class="hero" aria-labelledby="hero-title">
+        <!-- City background (SVG placeholder to simulate blurred city — replace with real image if available) -->
+        <svg class="city-bg" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <filter id="fBlur" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="10"></feGaussianBlur>
+            </filter>
+            <linearGradient id="g1" x1="0" x2="1">
+              <stop offset="0" stop-color="#F8F9FA"/>
+              <stop offset="1" stop-color="#ECEFF1"/>
+            </linearGradient>
+          </defs>
+          <!-- abstract skyline blocks -->
+          <rect x="0" y="420" width="1200" height="280" fill="#F1F5F9" />
+          <g transform="translate(40,230)" fill="#E6E9EE" filter="url(#fBlur)">
+            <rect x="0" y="120" width="120" height="180" rx="8"></rect>
+            <rect x="160" y="40" width="100" height="260" rx="8"></rect>
+            <rect x="300" y="80" width="180" height="220" rx="8"></rect>
+            <rect x="520" y="0" width="240" height="300" rx="8"></rect>
+            <rect x="800" y="140" width="120" height="160" rx="8"></rect>
+            <rect x="960" y="60" width="140" height="240" rx="8"></rect>
+          </g>
+        </svg>
+
+        <!-- network overlay -->
+        <svg class="network-canvas" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="lineGrad" x1="0" x2="1">
+              <stop offset="0" stop-color="rgba(107,114,128,0.12)"/>
+              <stop offset="1" stop-color="rgba(107,114,128,0.04)"/>
+            </linearGradient>
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="6" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- animated lines (stroke-dasharray animate via JS) -->
+          <g id="lines" stroke="url(#lineGrad)" stroke-width="1.2" fill="none">
+            <path id="p1" d="M80 520 L220 420 L360 480 L530 360 L700 420 L880 300 L1040 420" stroke-linecap="round" />
+            <path id="p2" d="M140 600 L260 520 L420 560 L620 430 L820 500 L980 420" stroke-linecap="round" />
+            <path id="p3" d="M40 440 L180 380 L320 420 L480 340 L640 380 L820 300 L1000 360" stroke-linecap="round"/>
+          </g>
+
+          <!-- nodes -->
+          <g id="nodes" filter="url(#glow)">
+            <circle cx="220" cy="420" r="4" fill="rgba(107,114,128,0.12)"></circle>
+            <circle cx="360" cy="480" r="5" fill="rgba(107,114,128,0.14)"></circle>
+            <circle cx="530" cy="360" r="6" fill="rgba(107,114,128,0.16)"></circle>
+            <circle cx="700" cy="420" r="5" fill="rgba(107,114,128,0.14)"></circle>
+            <circle cx="880" cy="300" r="4" fill="rgba(107,114,128,0.12)"></circle>
+            <circle cx="1040" cy="420" r="6" fill="rgba(107,114,128,0.16)"></circle>
+          </g>
+
+          <!-- traveling dots (animated with JS) -->
+          <g id="travelers" fill="#6b7280" opacity="0.9"></g>
+        </svg>
+
+        <div class="hero-inner">
+          <div class="brand" id="hero-title">
+            <!-- Inline SVG logo (simplified supply-chain nodes + text). Replace <title> and <desc> as needed. -->
+            <svg role="img" aria-labelledby="logoTitle logoDesc" width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+              <title id="logoTitle">NeuralOPT Logo</title>
+              <desc id="logoDesc">抽象供应链节点图形，简约几何网络</desc>
+              <g fill="none" stroke="none">
+                <circle cx="12" cy="20" r="3.6" fill="#6B7280"></circle>
+                <circle cx="28" cy="12" r="2.6" fill="#374151" opacity="0.95"></circle>
+                <circle cx="40" cy="24" r="3.2" fill="#6B7280"></circle>
+                <circle cx="22" cy="36" r="2.8" fill="#374151"></circle>
+                <line x1="14" y1="22" x2="26" y2="14" stroke="#9CA3AF" stroke-width="1.2" />
+                <line x1="30" y1="14" x2="40" y2="24" stroke="#9CA3AF" stroke-width="1.2" />
+                <line x1="24" y1="34" x2="38" y2="26" stroke="#9CA3AF" stroke-width="1.2" />
+              </g>
+            </svg>
+
+            <div>
+              <h1>NeuralOPT</h1>
+              <p class="slogan">让商业决策训练更智能</p>
+            </div>
+          </div>
+
+          <div class="hero-illustration" aria-hidden="false">
+            <p><strong>面向教学：更真实的 AI + 商业供应链决策模拟平台。</strong> 在这里，你可以训练决策逻辑、模拟供应链场景、分析 KPI 并优化策略。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: CARD -->
+      <aside class="card" aria-labelledby="card-title">
+        <div class="card-head">
+          <!-- Small inline logo -->
+          <svg width="36" height="36" viewBox="0 0 64 64" aria-hidden="true">
+            <g>
+              <circle cx="10" cy="18" r="2.8" fill="#6B7280"></circle>
+              <circle cx="26" cy="10" r="2.2" fill="#111827"></circle>
+              <circle cx="38" cy="22" r="2.6" fill="#6B7280"></circle>
+              <line x1="12" y1="20" x2="24" y2="12" stroke="#CBD5E1" stroke-width="1" />
+              <line x1="28" y1="12" x2="38" y2="22" stroke="#CBD5E1" stroke-width="1" />
+            </g>
+          </svg>
+
+          <div>
+            <div style="font-weight:700; font-size:15px;">欢迎来到 NeuralOPT</div>
+            <div class="slogan" style="margin-top:2px;">让商业决策训练更智能</div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs" role="tablist" aria-label="Auth Tabs">
+          <button class="tab" role="tab" id="tab-login" aria-controls="panel-login" aria-selected="true">登录</button>
+          <button class="tab" role="tab" id="tab-register" aria-controls="panel-register" aria-selected="false">注册</button>
+        </div>
+
+        <!-- LOGIN PANEL -->
+        <div id="panel-login" role="tabpanel" aria-labelledby="tab-login">
+          <form id="form-login" novalidate>
+            <div class="field">
+              <label for="login-identifier">账号（邮箱或手机号）</label>
+              <input id="login-identifier" name="identifier" type="text" inputmode="email" autocomplete="username" required aria-required="true" />
+              <div id="login-identifier-err" class="error" role="alert" aria-live="polite" style="display:none"></div>
+            </div>
+
+            <div class="field">
+              <label for="login-password">密码</label>
+              <div style="position:relative">
+                <input id="login-password" name="password" type="password" autocomplete="current-password" required aria-required="true" />
+                <button type="button" id="btn-toggle-pass" aria-label="切换密码可见性" style="position:absolute; right:8px; top:8px; background:transparent; border:0; cursor:pointer; color:var(--muted); font-size:13px;">显示</button>
+              </div>
+              <div id="login-password-err" class="error" role="alert" aria-live="polite" style="display:none"></div>
+            </div>
+
+            <div class="row">
+              <label class="checkbox">
+                <input id="remember" type="checkbox" /> <span>记住我</span>
+              </label>
+              <a href="#" class="link" id="forgot-link">忘记密码？</a>
+            </div>
+
+            <button class="btn" id="btn-login" type="submit" aria-disabled="false">登录</button>
+
+          </form>
+        </div>
+
+        <!-- REGISTER PANEL (hidden by default) -->
+        <div id="panel-register" role="tabpanel" aria-labelledby="tab-register" style="display:none">
+          <form id="form-register" novalidate>
+            <div class="field">
+              <label for="reg-name">姓名</label>
+              <input id="reg-name" name="name" type="text" autocomplete="name" required />
+            </div>
+
+            <div class="field">
+              <label for="reg-identifier">邮箱或手机号</label>
+              <input id="reg-identifier" name="identifier" type="text" inputmode="email" required />
+            </div>
+
+            <div class="field">
+              <label for="reg-password">设置密码</label>
+              <input id="reg-password" name="password" type="password" required />
+            </div>
+
+            <div class="field">
+              <label for="reg-password-confirm">确认密码</label>
+              <input id="reg-password-confirm" name="passwordConfirm" type="password" required />
+            </div>
+
+            <label class="checkbox">
+              <input id="agree" type="checkbox" required /> <span>我同意 <a href="#" class="link">服务条款</a> 和 <a href="#" class="link">隐私政策</a></span>
+            </label>
+
+            <button class="btn" id="btn-register" type="submit">创建账户</button>
+
+          </form>
+        </div>
+
+        <div style="height:6px"></div>
+        <div class="helper muted" style="font-size:12px;">需要帮助？联系 <a href="#" class="link">16692660730@163.com</a></div>
+      </aside>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <!-- Configuration constants -->
+  <script id="config" type="application/json">
+    {
+      "PLATFORM_NAME":"NeuralOPT",
+      "SLOGAN":"让商业决策训练更智能",
+      "REDIRECT_URL":"/lobby.html",
+      "MAIN_ACCENT":"#6B7280"
+    }
+  </script>
+
+  <script>
+    (function(){
+      // Basic config
+      const cfg = JSON.parse(document.getElementById('config').textContent || '{}');
+      const REDIRECT_URL = cfg.REDIRECT_URL || '/lobby.html';
+      const toastEl = document.getElementById('toast');
+
+      // Tab behavior
+      const tabLogin = document.getElementById('tab-login');
+      const tabRegister = document.getElementById('tab-register');
+      const panelLogin = document.getElementById('panel-login');
+      const panelRegister = document.getElementById('panel-register');
+
+      function switchTab(to){
+        if(to === 'login'){
+          tabLogin.setAttribute('aria-selected','true');
+          tabRegister.setAttribute('aria-selected','false');
+          panelLogin.style.display = '';
+          panelRegister.style.display = 'none';
+        } else {
+          tabLogin.setAttribute('aria-selected','false');
+          tabRegister.setAttribute('aria-selected','true');
+          panelLogin.style.display = 'none';
+          panelRegister.style.display = '';
+        }
+      }
+      tabLogin.addEventListener('click', ()=>switchTab('login'));
+      tabRegister.addEventListener('click', ()=>switchTab('register'));
+
+      // Password toggle
+      const btnToggle = document.getElementById('btn-toggle-pass');
+      const loginPass = document.getElementById('login-password');
+      btnToggle.addEventListener('click', function(){
+        const isPwd = loginPass.getAttribute('type') === 'password';
+        loginPass.setAttribute('type', isPwd ? 'text' : 'password');
+        btnToggle.textContent = isPwd ? '隐藏' : '显示';
+      });
+
+      // Basic Toast
+      function showToast(text, timeout=3500){
+        toastEl.textContent = text;
+        toastEl.style.display = 'block';
+        clearTimeout(toastEl._t);
+        toastEl._t = setTimeout(()=>{ toastEl.style.display='none'; }, timeout);
+      }
+
+      // Simple validators
+      function isEmailLike(v){
+        return /\S+@\S+\.\S+/.test(v);
+      }
+      function isPhoneLike(v){
+        return /^\+?\d{6,15}$/.test(v.replace(/\s+/g,''));
+      }
+      function checkIdentifier(value){
+        if(!value || !value.trim()) return {ok:false, msg:'请输入邮箱或手机号'};
+        const v = value.trim();
+        if(isEmailLike(v) || isPhoneLike(v)) return {ok:true};
+        return {ok:false, msg:'请输入有效的邮箱或手机号格式'};
+      }
+      function checkPassword(v){
+        if(!v || v.length < 8) return {ok:false, msg:'密码至少 8 位'};
+        return {ok:true};
+      }
+
+      // LOGIN FORM
+      const formLogin = document.getElementById('form-login');
+      const loginId = document.getElementById('login-identifier');
+      const loginIdErr = document.getElementById('login-identifier-err');
+      const loginPassErr = document.getElementById('login-password-err');
+      const btnLogin = document.getElementById('btn-login');
+
+      formLogin.addEventListener('submit', function(e){
+        e.preventDefault();
+        // Clear errors
+        loginIdErr.style.display = 'none';
+        loginPassErr.style.display = 'none';
+
+        const idVal = loginId.value || '';
+        const pwVal = loginPass.value || '';
+
+        const idCheck = checkIdentifier(idVal);
+        if(!idCheck.ok){
+          loginIdErr.textContent = idCheck.msg; loginIdErr.style.display = 'block'; loginId.focus(); return;
+        }
+        const pwCheck = checkPassword(pwVal);
+        if(!pwCheck.ok){
+          loginPassErr.textContent = pwCheck.msg; loginPassErr.style.display = 'block'; loginPass.focus(); return;
+        }
+
+        // mock authentication (replace with real API call)
+        btnLogin.setAttribute('aria-disabled','true'); btnLogin.textContent = '登录中…';
+        setTimeout(()=>{
+          btnLogin.removeAttribute('aria-disabled'); btnLogin.textContent = '登录';
+          // mock success: store remember-me
+          const remember = document.getElementById('remember').checked;
+          if(remember){
+            try{ localStorage.setItem('neuralopt_last_account', idVal); }catch(e){}
+          } else {
+            try{ localStorage.removeItem('neuralopt_last_account'); }catch(e){}
+          }
+          showToast('登录成功，正在跳转…');
+          // redirect
+          window.location.href = REDIRECT_URL;
+        }, 900);
+      });
+
+      // REGISTER FORM
+      const formRegister = document.getElementById('form-register');
+      formRegister.addEventListener('submit', function(e){
+        e.preventDefault();
+        // basic checks
+        const name = document.getElementById('reg-name').value.trim();
+        const ident = document.getElementById('reg-identifier').value.trim();
+        const pwd = document.getElementById('reg-password').value;
+        const pwd2 = document.getElementById('reg-password-confirm').value;
+        const agree = document.getElementById('agree').checked;
+
+        if(!name){ showToast('请输入姓名'); return; }
+        const idCheck = checkIdentifier(ident);
+        if(!idCheck.ok){ showToast(idCheck.msg); return; }
+        const pwCheck = checkPassword(pwd);
+        if(!pwCheck.ok){ showToast(pwCheck.msg); return; }
+        if(pwd !== pwd2){ showToast('两次输入的密码不一致'); return; }
+        if(!agree){ showToast('请同意服务条款'); return; }
+
+        // mock register
+        const btnReg = document.getElementById('btn-register');
+        btnReg.setAttribute('aria-disabled','true'); btnReg.textContent='创建中…';
+        setTimeout(()=>{
+          btnReg.removeAttribute('aria-disabled'); btnReg.textContent='创建账户';
+          showToast('注册成功，正在登录…');
+          // auto redirect to lobby for demo
+          window.location.href = REDIRECT_URL;
+        }, 1200);
+      });
+
+      // Load remembered account if present
+      try{
+        const last = localStorage.getItem('neuralopt_last_account');
+        if(last){ loginId.value = last; document.getElementById('remember').checked = true; }
+      }catch(e){ /* ignore */ }
+
+      // Forgot password link (simple flow)
+      const forgotLink = document.getElementById('forgot-link');
+      forgotLink.addEventListener('click', function(e){
+        e.preventDefault();
+        const val = prompt('请输入注册邮箱以接收重置链接（模拟）：');
+        if(val){
+          if(!isEmailLike(val)){ showToast('请输入有效邮箱以接收重置邮件'); return; }
+          showToast('已发送重置邮件（模拟）。');
+        }
+      });
+
+      // keyboard: Enter to submit when in inputs (default is already).
+      // Accessibility: ensure tab order is logical (HTML arrangement preserves this).
+
+      // Background animation: traveling dots along paths
+      // Respect prefers-reduced-motion and mobile size
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const smallViewport = window.matchMedia('(max-width:800px)').matches;
+
+      if(!prefersReduced && !smallViewport){
+        // create moving dots along path using JS and stroke-dashoffset animation
+        const paths = [
+          document.getElementById('p1'),
+          document.getElementById('p2'),
+          document.getElementById('p3')
+        ].filter(Boolean);
+
+        const travelers = document.getElementById('travelers');
+
+        // For each path, create a small circle that travels
+        paths.forEach((p, idx)=>{
+          const len = p.getTotalLength();
+          p.style.strokeDasharray = String(len);
+          p.style.strokeDashoffset = String(len);
+          // create traveling dot
+          const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
+          dot.setAttribute('r','3');
+          dot.setAttribute('fill','#6B7280');
+          dot.setAttribute('opacity','0.9');
+          travelers.appendChild(dot);
+
+          // animate via requestAnimationFrame
+          let t0 = performance.now() + idx*400;
+          const speed = 0.00012 + idx * 0.00002; // relative speed
+          function step(now){
+            const elapsed = now - t0;
+            const prog = (elapsed * speed) % 1; // [0,1)
+            const pos = prog * len;
+            const pt = p.getPointAtLength(pos);
+            dot.setAttribute('cx', pt.x);
+            dot.setAttribute('cy', pt.y);
+            // subtle dash offset to create flowing appearance
+            p.style.strokeDashoffset = String(len - pos);
+            requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+        });
+      } else {
+        // reduced motion or small screen: minimal static rendering (no animation)
+      }
+
+      // Clean up on page unload if needed
+      window.addEventListener('unload', ()=>{
+        clearTimeout(toastEl._t);
+      });
+
+      // Expose small API for debugging
+      window._NeuralOPT_demo = { switchTab, showToast };
+    })();
+  </script>
+</body>
+</html>
